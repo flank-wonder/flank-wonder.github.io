@@ -3258,7 +3258,10 @@ function loop(){
 loop();
 
 // ---------- 開始 ----------
-document.getElementById('startBtn').addEventListener('click', ()=>{
+let gameStarted = false;
+function startGame(){
+  if(gameStarted) return;   // 二重発火(touchend→click)を防ぐ
+  gameStarted = true;
   initAudio();
   updateFlashIntensity(); updateBattHud();
   $('title').style.display = 'none';
@@ -3266,10 +3269,15 @@ document.getElementById('startBtn').addEventListener('click', ()=>{
   $('dayLabel').textContent = dayNames[0];
   refreshInv(); updateWeapHUD(); updateBottleHud();
   playing = true;
-  if(!IS_TOUCH) canvas.requestPointerLock();
-  else { try{ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }catch(e){} }
+  if(!IS_TOUCH){
+    try{ canvas.requestPointerLock(); }catch(e){}
+  }
   showMsg('三層の屋敷……玄関は一階の南。鍵は地下か二階か——それとも、プールの底か', 5000);
-});
+}
+const _startBtn = document.getElementById('startBtn');
+_startBtn.addEventListener('click', startGame);
+// iOSではclickが不安定なため、タッチ端末はtouchendでも発火させる
+_startBtn.addEventListener('touchend', e=>{ e.preventDefault(); startGame(); }, {passive:false});
 </script>
 </body>
 </html>
