@@ -6995,7 +6995,8 @@ function loop(){
   const bbYaw = (grp, spr)=>{
     spr.rotation.y = Math.atan2(camera.position.x-grp.position.x, camera.position.z-grp.position.z) - grp.rotation.y;
   };
-  bbYaw(granny, grannySpr); bbYaw(crawler, crawlerSpr); bbYaw(drowned, drownedSpr);
+  if(grannySpr_fallback) bbYaw(granny, grannySpr_fallback); // GLB未読込時のみ
+  bbYaw(crawler, crawlerSpr); bbYaw(drowned, drownedSpr);
   renderer.render(scene, camera);
 }
 loop();
